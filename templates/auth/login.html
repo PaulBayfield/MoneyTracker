@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    {% include './fragments/_meta.html' %}
+
+    <title>MoneyTracker • Log in</title>
+
+    <link rel="favicon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/container.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    {% include './fragments/_analytics.html' %}
+
+    {% include './fragments/_script.html' %}
+</head>
+<body>
+    {% include './fragments/_header.html' %}
+    <section class="container" id="albums">
+        <div class="column">
+            <div class="box big">
+                <div class="title">
+                    <h1 lang="fr">Connectez-vous</h1>
+                    <h1 lang="en">Log in</h1>
+                </div>
+                <form id="login-form" action="/user/login" method="POST">
+                    <input type="text" name="username" placeholder="Nom d'utilisateur" required>
+                    <input type="password" name="password" placeholder="Mot de passe" required>
+                    <input type="submit" value="Se connecter" lang="fr">
+                    <input type="submit" value="Log in" lang="en">
+                </form>
+            </div>
+            <div class="box">
+                <div class="title">
+                    <h1 lang="fr">A propos</h1>
+                    <h1 lang="en">About</h1>
+                </div>
+                <div class="description">
+                    <p lang="fr">Ce site a été créé afin de gérer les dépenses et les revenus de manière simple et efficace.</p>
+                    <p lang="en">This website was created to manage expenses and incomes in a simple and efficient way.</p>
+                    
+                    <p lang="fr">Accéder à la démo ici : <a class="link" href="/demo">Démo</a>.</p>
+                    <p lang="en">Access the demo here: <a class="link" href="/demo">Demo</a>.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="box">
+                <div class="title">
+                    <h1 lang="fr">Liens utiles</h1>
+                    <h1 lang="en">Useful links</h1>
+                </div>
+                <div class="description">
+                    <p lang="fr">Ce site est open source, vous pouvez retrouver le code source sur <a class="link" href="https://github.com/PaulBayff/MoneyTracker" target="_blank">GitHub</a>.</p>
+                    <p lang="en">This website is open source, you can find the source code on <a class="link" href="https://github.com/PaulBayff/MoneyTracker" target="_blank">GitHub</a>.</p>
+                
+                    <p lang="fr">Réalise par <a class="link" href="https://bayfield.dev" target="_blank">Paul Bayfield</a>.</p>
+                    <p lang="en">Made by <a class="link" href="https://bayfield.dev" target="_blank">Paul Bayfield</a>.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% include './fragments/_footer.html' %}
+</body>
+</html>

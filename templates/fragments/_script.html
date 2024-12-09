@@ -1,0 +1,114 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    let language = "{{ session.language }}";
+
+    if ("{{ session.theme }}" == "dark") {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        $("#mode").removeAttr("src").attr("src", "dark.png");
+
+        $("*[id='mode-dark']").hide();
+        $("*[id='mode-light']").show();
+    } else {
+        document.documentElement.setAttribute('data-theme', 'light');
+        $("#mode").removeAttr("src").attr("src", "light.png");
+
+        $("*[id='mode-dark']").show();
+        $("*[id='mode-light']").hide();
+    }
+
+    $(document).ready(function () {
+        $("*[lang='fr']").show();
+        $("*[lang='en']").hide();
+        $("html").show();
+
+        if ("{{ session.theme }}" == "dark") {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            $("#mode").removeAttr("src").attr("src", "dark.png");
+
+            $("*[id='mode-dark']").hide();
+            $("*[id='mode-light']").show();
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            $("#mode").removeAttr("src").attr("src", "light.png");
+
+            $("*[id='mode-dark']").show();
+            $("*[id='mode-light']").hide();
+        }
+
+        if ("{{ session.language }}" == "en") {
+            $("*[lang='fr']").hide();
+            $("*[lang='en']").show();
+            $("html").show();
+        };
+
+        $("#switch-lang").click(function () {
+            $("*[lang='fr']").toggle();
+            $("*[lang='en']").toggle();
+            $("html").show();
+
+            $.ajax({
+                url: '/user/settings',
+                method: 'POST',
+                data: JSON.stringify({ language: language == "fr" ? "en" : "fr" }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    console.log("Language saved to session.");
+                }
+            });
+        });
+
+        $("#switch-mode").click(function () {
+            $("*[id='mode-dark']").toggle();
+            $("*[id='mode-light']").toggle();
+
+            let theme;
+            if (document.documentElement.getAttribute('data-theme') == 'dark') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                $("#mode").removeAttr("src").attr("src", "light.png");
+                theme = 'light';
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                $("#mode").removeAttr("src").attr("src", "dark.png");
+                theme = 'dark';
+            }
+
+            $.ajax({
+                url: '/user/settings',
+                method: 'POST',
+                data: JSON.stringify({ theme: theme }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    console.log("Theme saved to session.");
+                }
+            });
+        });
+
+        const hamburger = $(".hamburger");
+        const year = $("#annee");
+        const header = $("#header");
+
+        var isOpen = false;
+
+        hamburger.on("click", function() {
+            if (!isOpen) {
+                $("body").addClass('noscroll');
+            } else {
+                $("body").removeClass('noscroll');
+            }
+            isOpen = !isOpen;
+            header.toggleClass("active");
+        });
+
+        $(".links > *").on("click", function() {
+            $("body").removeClass('noscroll');
+            isOpen = false;
+            header.removeClass("active");
+        });
+
+        $(window).on("load", function() {
+            year.text(new Date().getFullYear());
+        });
+    });
+</script>

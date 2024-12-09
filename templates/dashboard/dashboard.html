@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    {% include './fragments/_meta.html' %}
+
+    <title>MoneyTracker • Dashboard</title>
+
+    <link rel="favicon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stat.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/container.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tooltip.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    {% include './fragments/_analytics.html' %}
+
+    {% include './fragments/_script.html' %}
+</head>
+<body>
+    {% include './fragments/_header.html' %}
+    <section class="container">
+        <div class="column">
+            <div class="box">
+                <div class="title">
+                    <h1 lang="fr">Tableau de Bord</h1>
+                    <h1 lang="en">Dashboard</h1>
+                </div>
+                <div class="description">
+                    <p lang="fr">Bienvenue sur votre tableau de bord.</p>
+                    <p lang="fr">Vous trouverez ici un résumé de vos finances.</p>
+                    <p lang="en">Welcome to your dashboard.</p>
+                    <p lang="en">Here you will find a summary of your finances.</p>
+                </div>
+            </div>
+            <div class="box">
+                <div class="title">
+                    <h1 lang="fr">Informations</h1>
+                    <h1 lang="en">About</h1>
+                </div>
+                <div class="description">
+                    <p lang="fr">Profil : {{ data.user }}</p>
+                    <p lang="en">Profile: {{ data.user }}</p>
+                    <p lang="fr">Compte n°{{ data.account }}</p>
+                    <p lang="en">Account n°{{ data.account }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="stat number">
+                <div class="header">
+                    <p lang="fr">Solde</p>
+                    <p lang="en">Balance</p>
+                    <div class="tooltip">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="tooltiptext" lang="fr">Compte n°{{ data.account }}</span>
+                        <span class="tooltiptext" lang="en">Account n°{{ data.account }}</span>
+                    </div>
+                </div>
+                <div class="value">
+                    <h2>{{ '{:,}'.format(data.balance) }} €</h2>
+                </div>
+            </div>
+            <div class="stat number">
+                <div class="header">
+                    <p lang="fr">Transactions</p>
+                    <p lang="en">Transactions</p>
+                    <div class="tooltip">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="tooltiptext" lang="fr">Depuis le {{ data.transaction_from }}</span>
+                        <span class="tooltiptext" lang="en">Since {{ data.transaction_from }}</span>
+                    </div>
+                </div>
+                <div class="value">
+                    <h2>{{ '{:,}'.format(data.transactions | length) }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="stat number">
+                <div class="header">
+                    <p lang="fr">Dépenses Mensuelles</p>
+                    <p lang="en">Monthly Expenses</p>
+                    <div class="tooltip">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="tooltiptext" lang="fr">Dépenses du mois comparées au mois précédent</span>
+                        <span class="tooltiptext" lang="en">Month expenses compared to last month</span>
+                    </div>
+                </div>
+                <div class="value">
+                    <h2>{{ '{:,}'.format(data.spent.month | abs | round(2))  }} €</h2>
+                    {% if data.spent.month - data.spent.last_month > 0 %}
+                        <p class="positive">-{{ '{:,}'.format((data.spent.month - data.spent.last_month) | abs | round(2)) }} €</p>
+                    {% elif data.spent.month - data.spent.last_month < 0 %}
+                        <p class="negative">+{{ '{:,}'.format((data.spent.month - data.spent.last_month) | abs | round(2)) }} €</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="stat number">
+                <div class="header">
+                    <p lang="fr">Revenus Mensuels</p>
+                    <p lang="en">Monthly Income</p>
+                    <div class="tooltip">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="tooltiptext" lang="fr">Revenus du mois comparés au mois précédent</span>
+                        <span class="tooltiptext" lang="en">Month income compared to last month</span>
+                    </div>
+                </div>
+                <div class="value">
+                    <h2>{{ '{:,}'.format(data.received.month | abs | round(2)) }} €</h2>
+                    {% if data.received.month - data.received.last_month > 0 %}
+                        <p class="positive">+{{ '{:,}'.format((data.received.month - data.received.last_month) | round(2)) }} €</p>
+                    {% elif data.received.month - data.received.last_month < 0 %}
+                        <p class="negative">{{ '{:,}'.format((data.received.month - data.received.last_month) | round(2)) }} €</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="stat number">
+                <div class="header">
+                    <p lang="fr">Dépenses Annuelles</p>
+                    <p lang="en">Yearly Expenses</p>
+                    <div class="tooltip">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="tooltiptext" lang="fr">Dépenses de l'année comparées à l'année précédente</span>
+                        <span class="tooltiptext" lang="en">Year expenses compared to last year</span>
+                    </div>
+                </div>
+                <div class="value">
+                    <h2>{{ '{:,}'.format(data.spent.year | abs | round(2)) }} €</h2>
+                    {% if data.spent.year - data.spent.last_year > 0 %}
+                        <p class="positive">-{{ '{:,}'.format((data.spent.year - data.spent.last_year) | abs | round(2)) }} €</p>
+                    {% elif data.spent.year - data.spent.last_year < 0 %}
+                        <p class="negative">+{{ '{:,}'.format((data.spent.year - data.spent.last_year) | abs | round(2)) }} €</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="stat number">
+                <div class="header">
+                    <p lang="fr">Revenus Annuels</p>
+                    <p lang="en">Yearly Income</p>
+                    <div class="tooltip">
+                        <span class="material-symbols-outlined">info</span>
+                        <span class="tooltiptext" lang="fr">Revenus de l'année comparés à l'année précédente</span>
+                        <span class="tooltiptext" lang="en">Year income compared to last year</span>
+                    </div>
+                </div>
+                <div class="value">
+                    <h2>{{ '{:,}'.format(data.received.year | abs | round(2)) }} €</h2>
+                    {% if data.received.year - data.received.last_year > 0 %}
+                        <p class="positive">+{{ '{:,}'.format((data.received.year - data.received.last_year) | round(2)) }} €</p>
+                    {% elif data.received.year - data.received.last_year < 0 %}
+                        <p class="negative">{{ '{:,}'.format((data.received.year - data.received.last_year) | round(2)) }} €</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="stat chart">
+                <div class="header">
+                    <p lang="fr">Dépenses et Revenus Journaliers</p>
+                    <p lang="en">Daily Expenses and Income</p>
+                </div>
+                <canvas id="daily-chart"></canvas>
+            </div>
+            <div class="stat chart">
+                <div class="header">
+                    <p lang="fr">Dépenses et Revenus Mensuels</p>
+                    <p lang="en">Monthly Expenses and Income</p>
+                </div>
+                <canvas id="monthly-chart"></canvas>
+            </div>
+        </div>
+        <div class="column">
+            <div class="stat chart">
+                <div class="header">
+                    <p lang="fr">Dépenses et Revenus par Catégorie</p>
+                    <p lang="en">Expenses and Income by Category</p>
+                </div>
+                <canvas id="category-chart"></canvas>
+            </div>
+            <div class="box">
+                <div class="title">
+                    <h1 lang="fr">Catégories</h1>
+                    <h1 lang="en">Categories</h1>
+                </div>
+                <div class="filter">
+                    <form class="filter-form">
+                        <select id="category-filter">
+                            <option value="all">Tout</option>
+                            <option value="30d" selected>30 derniers jours</option>
+                            <option value="7d">7 derniers jours</option>
+                            <option value="1d">Aujourd'hui</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="description between" id="categories">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="box">
+                <div class="title">
+                    <h1 lang="fr">Dernières Transactions</h1>
+                    <h1 lang="en">Last Transactions</h1>
+                </div>
+                <div class="filter">
+                    <form class="filter-form">
+                        <select id="transactions-filter">
+                            <option value="30d" selected>30 derniers jours</option>
+                            <option value="7d">7 derniers jours</option>
+                            <option value="1d">Aujourd'hui</option>
+                        </select>
+                    </form>
+                </div>
+                <div class="description between" id="transactions">
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        window.transactions = {{ data.transactions | tojson | safe }};
+        window.balance = {{ data.balance }};
+        window.labels = {{ data.labels | tojson | safe }};
+    </script>
+    <script src="{{ url_for('static', filename='js/financial-charts.js') }}"></script>
+
+    {% include './fragments/_footer.html' %}
+</body>
+</html>
