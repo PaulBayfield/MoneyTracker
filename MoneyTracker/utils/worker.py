@@ -5,7 +5,7 @@ from ..utils.logger import Logger
 from asyncpg import Pool, Connection
 from dotenv import load_dotenv
 from datetime import datetime
-
+import numpy as np
 
 load_dotenv(dotenv_path='./.env')
 
@@ -42,7 +42,7 @@ class Worker:
                 continue
 
             # Connexion au compte LCL
-            client = LCLClient(f"./profiles/{profile}/.env")
+            client = LCLClient(f"./profiles/{profile}/.env" , self.logger)
 
 
             # Insersion de l'utilisateur dans la base de données
@@ -59,7 +59,7 @@ class Worker:
                             $1, $2
                         ) ON CONFLICT (id) DO NOTHING;
                     """,
-                    int(client.account_id),
+                    np.int64(client.account_id),
                     profile.title()
                 )
 
@@ -76,7 +76,7 @@ class Worker:
                         UPDATE public.accounts SET balance = $1 WHERE id = $2;
                     """,
                     balance,
-                    int(client.account_id)
+                    np.int64(client.account_id),
                 )
 
             self.logger.info("Solde mis à jour !")
@@ -135,7 +135,7 @@ class Worker:
                         transaction.amount_currency,
                         transaction.movement_code_type,
                         transaction.nature,
-                        int(client.account_id)
+                        np.int64(client.account_id),
                     )
 
             self.logger.info("Transactions insérées dans la base de données !")

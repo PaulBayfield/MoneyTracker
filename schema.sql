@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.transactions (
     amount_currency VARCHAR(3),
     movement_code_type VARCHAR(255),
     nature VARCHAR(255),
-    user_id INT,
+    user_id BIGINT,
     CONSTRAINT pk_transactions PRIMARY KEY (id, label, booking_date_time, amount),
     CONSTRAINT fk_transactions_user_id FOREIGN KEY (user_id) REFERENCES public.accounts (id)
 );
