@@ -7,7 +7,7 @@
 ***************************************************************/
 
 CREATE TABLE IF NOT EXISTS public.accounts (
-    id INT PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     username VARCHAR(255),
     balance DECIMAL(10, 2) DEFAULT 0.0
 );
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS public.users (
     USERNAME VARCHAR(128) NOT NULL PRIMARY KEY,
     PASSWORD TEXT NOT NULL,
     TOKEN TEXT,
-    account INT,
+    account BIGINT,
     CONSTRAINT fk_users_account FOREIGN KEY (account) REFERENCES public.accounts (id)
 );
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS public.transactions (
     amount_currency VARCHAR(3),
     movement_code_type VARCHAR(255),
     nature VARCHAR(255),
-    user_id INT,
+    user_id BIGINT,
     CONSTRAINT pk_transactions PRIMARY KEY (id, label, booking_date_time, amount),
     CONSTRAINT fk_transactions_user_id FOREIGN KEY (user_id) REFERENCES public.accounts (id)
 );
