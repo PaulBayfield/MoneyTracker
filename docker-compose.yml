@@ -22,8 +22,6 @@ services:
 
     volumes:
       - ./logs:/MoneyTracker/logs
-    networks:
-      - MoneyTrackerNetwork
 
   adminer:
     image: michalhosna/adminer
@@ -54,8 +52,6 @@ services:
       - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
     ports:
       - "5432:5432"
-    networks:
-      - MoneyTrackerNetwork
     healthcheck:
       test:
         ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DATABASE}"]
@@ -64,6 +60,4 @@ services:
       retries: 10
     restart: unless-stopped
 
-networks:
-  MoneyTrackerNetwork:
-    external: true
+
