@@ -53,7 +53,7 @@ class Transactions:
         """
         self.raw = data
 
-        self.transactions = [Transaction(transaction) for transaction in data.get("accountTransactions")]
+        self.transactions = [Transaction(transaction) for transaction in data.get("accountTransactions")] if data.get("accountTransactions") else []
 
 
     def __len__(self) -> int:

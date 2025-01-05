@@ -65,7 +65,7 @@ class LCLClient:
         }
 
         async with aiohttp.ClientSession(headers=headers) as session:
-            async with session.get(f"{__baseURL__}/user/accounts/{environ['ACCOUNT_ID']}/transactions?contract_id={environ['CONTRACT_ID']}&range=0-500") as response:
+            async with session.get(f"{__baseURL__}/user/accounts/{environ['ACCOUNT_ID']}/transactions?contract_id={environ['CONTRACT_ID']}&range=0-99") as response:
                 data = await response.json()
 
         return Transactions(data)

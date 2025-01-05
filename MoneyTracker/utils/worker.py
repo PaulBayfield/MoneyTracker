@@ -96,6 +96,9 @@ class Worker:
             async with self.pool.acquire() as connection:
                 connection: Connection
                 for transaction in transactions:
+                    if transaction.id is None:
+                        continue
+
                     # self.logger.info(f"Insertion de la transaction {transaction.id} ({transaction.label} - {transaction.amount} €)...")
                     await connection.execute(
                         """
